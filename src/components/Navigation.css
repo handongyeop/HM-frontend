@@ -1,0 +1,35 @@
+.icon-menu {
+  width: 5rem;
+}
+
+.icon-menu-slide {
+  width: 5rem;
+  animation: slide 0.3s linear forwards;
+}
+
+@keyframes slide {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(0, -0.3rem);
+  }
+}
+
+.nav-bar {
+  position: relative;
+  margin: auto;
+  width: 1080px;
+  height: 150px;
+}
+
+.nav-bar ul {
+  width: 1000px;
+  margin: auto;
+  text-align: center;
+}
+
+.nav-bar li {
+  display: inline-block;
+  margin: 0 2rem;
+}
