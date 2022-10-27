@@ -4,6 +4,10 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import SigninModal from './user/SigninModal';
+import SignupModal from './user/SignupModal';
+import { useSelector, useDispatch } from 'react-redux';
+import { signupAction } from '../redux/SignupSlice';
+import { signinAction } from '../redux/SigninSlice';
 
 const StyledLogoImage = styled.img`
   width: 10rem;
@@ -12,19 +16,13 @@ const StyledLogoImage = styled.img`
   left: 2rem;
 `;
 
-const StyledPointerLi = styled.li`
-  cursor: pointer;
-`;
-
 const Header = () => {
   const [login, setLogin] = useState(false);
-  const [signin, setSignin] = useState(false);
-
   const isLogin = login;
 
-  const openSignin = () => {
-    setSignin(!signin);
-  };
+  const dispatch = useDispatch();
+  const signinVal = useSelector((state) => state.signin.value);
+  const signupVal = useSelector((state) => state.signup.value);
 
   return (
     <div className="header-wrapper">
@@ -34,23 +32,32 @@ const Header = () => {
       <div className="header-menu">
         <nav>
           <ul>
-            <li>고객센터</li>
+            <li className="pointer">고객센터</li>
             {isLogin === login ? (
-              <StyledPointerLi onClick={openSignin}>회원가입</StyledPointerLi>
+              <li
+                className="pointer"
+                onClick={() => dispatch(signupAction.toggle())}
+              >
+                회원가입
+              </li>
             ) : (
-              <li>마이페이지</li>
+              <li className="pointer">마이페이지</li>
             )}
             {isLogin === login ? (
-              <StyledPointerLi onClick={openSignin}>로그인</StyledPointerLi>
+              <li
+                className="pointer"
+                onClick={() => dispatch(signinAction.toggle())}
+              >
+                로그인
+              </li>
             ) : (
-              <li>로그아웃</li>
+              <li className="pointer">로그아웃</li>
             )}
           </ul>
         </nav>
       </div>
-      {signin && (
-        <SigninModal closeModal={() => setSignin(!signin)}></SigninModal>
-      )}
+      {signinVal && <SigninModal />}
+      {signupVal && <SignupModal />}
     </div>
   );
 };

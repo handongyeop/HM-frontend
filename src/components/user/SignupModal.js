@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import SigninPage from '../../pages/user/SigninPage';
+import SignupPage from '../../pages/user/SignupPage';
 import { useDispatch } from 'react-redux';
-import { signinAction } from '../../redux/SigninSlice';
+import { signupAction } from '../../redux/SignupSlice';
 
 const StyledModalDiv = styled.div`
   position: fixed;
@@ -20,7 +20,7 @@ const StyledModalDiv = styled.div`
 const StyledModalBodyDiv = styled.div`
   position: absolute;
   width: 400px;
-  height: 600px;
+  height: 800px;
   padding: 40px;
   text-align: center;
   background-color: rgb(255, 255, 255);
@@ -39,9 +39,9 @@ const StyledModalCloseBtn = styled.button`
   cursor: pointer;
 `;
 
-const SigninModal = () => {
+const SignupModal = () => {
   const dispatch = useDispatch();
-  const openSignin = () => dispatch(signinAction.toggle());
+  const openSignup = () => dispatch(signupAction.toggle());
 
   useEffect(() => {
     document.body.style.cssText = `
@@ -57,13 +57,13 @@ const SigninModal = () => {
   }, []);
 
   return (
-    <StyledModalDiv onClick={openSignin}>
+    <StyledModalDiv onClick={openSignup}>
       <StyledModalBodyDiv onClick={(e) => e.stopPropagation()}>
-        <StyledModalCloseBtn onClick={openSignin}>✖</StyledModalCloseBtn>
-        <SigninPage />
+        <StyledModalCloseBtn onClick={openSignup}>✖</StyledModalCloseBtn>
+        <SignupPage />
       </StyledModalBodyDiv>
     </StyledModalDiv>
   );
 };
 
-export default SigninModal;
+export default SignupModal;
