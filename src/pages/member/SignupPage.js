@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { useDispatch } from 'react-redux';
-import { signupAction } from '../../redux/SignupSlice';
+import { signinAction, signupAction } from '../../redux/SignReducer';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -55,7 +55,11 @@ const SignupPage = () => {
   };
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  const joinValid = () => {};
+
   const submitMember = () => {
+    joinValid();
     fetch('http://localhost:8080/member', {
       method: 'POST',
       headers: {
@@ -70,8 +74,10 @@ const SignupPage = () => {
       .then((res) => {
         if (res !== null) {
           dispatch(signupAction.toggle());
+          alert('회원가입에 성공하셨습니다.');
+          dispatch(signinAction.toggle());
         } else {
-          alert('책 등록에 실패하였습니다.');
+          alert('회원 등록에 실패하였습니다.');
         }
       })
       .catch((error) => {

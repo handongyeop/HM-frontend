@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import logo from '../img/logo.jpg';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import './Header.css';
-import SigninModal from './user/SigninModal';
-import SignupModal from './user/SignupModal';
+import SigninModal from './member/SigninModal';
+import SignupModal from './member/SignupModal';
 import { useSelector, useDispatch } from 'react-redux';
-import { signupAction } from '../redux/SignupSlice';
-import { signinAction } from '../redux/SigninSlice';
+import { signinAction, signupAction } from '../redux/SignReducer';
+import { memberAction } from '../redux/MemberReducer';
 
 const StyledLogoImage = styled.img`
   width: 10rem;
@@ -17,12 +17,11 @@ const StyledLogoImage = styled.img`
 `;
 
 const Header = () => {
-  const [login, setLogin] = useState(false);
-  const isLogin = login;
-
-  const dispatch = useDispatch();
+  const member = useSelector((state) => state.login.value);
+  const isLogin = useSelector((state) => state.login.isLogin);
   const signinVal = useSelector((state) => state.signin.value);
   const signupVal = useSelector((state) => state.signup.value);
+  const dispatch = useDispatch();
 
   return (
     <div className="header-wrapper">
@@ -33,7 +32,7 @@ const Header = () => {
         <nav>
           <ul>
             <li className="pointer">고객센터</li>
-            {isLogin === login ? (
+            {isLogin === false ? (
               <li
                 className="pointer"
                 onClick={() => dispatch(signupAction.toggle())}
@@ -43,7 +42,7 @@ const Header = () => {
             ) : (
               <li className="pointer">마이페이지</li>
             )}
-            {isLogin === login ? (
+            {isLogin === false ? (
               <li
                 className="pointer"
                 onClick={() => dispatch(signinAction.toggle())}
@@ -51,8 +50,14 @@ const Header = () => {
                 로그인
               </li>
             ) : (
-              <li className="pointer">로그아웃</li>
+              <li
+                className="pointer"
+                onClick={() => dispatch(memberAction.logout())}
+              >
+                로그아웃
+              </li>
             )}
+            {isLogin && <li>{member.nick}님 환영합니다.</li>}
           </ul>
         </nav>
       </div>

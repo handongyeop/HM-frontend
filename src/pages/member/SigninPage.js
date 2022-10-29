@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -13,8 +13,8 @@ import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
 import logo from '../../img/logo.jpg';
 import { useDispatch } from 'react-redux';
-import { signupAction } from '../../redux/SignupSlice';
-import { signinAction } from '../../redux/SigninSlice';
+import { signinAction, signupAction } from '../../redux/SignReducer';
+import { memberAction } from '../../redux/MemberReducer';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -45,18 +45,20 @@ const StyledLogoImage = styled.img`
 `;
 
 const LoginPage = () => {
+  const [login, setLogin] = useState({
+    email: '',
+    pw: '',
+  });
+  const changeValue = (e) => {
+    setLogin({
+      ...login,
+      [e.target.name]: e.target.value,
+    });
+  };
   const classes = useStyles();
   const [values, setValues] = React.useState({
-    amount: '',
-    password: '',
-    weight: '',
-    weightRange: '',
     showPassword: false,
   });
-
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
 
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
@@ -72,12 +74,37 @@ const LoginPage = () => {
     dispatch(signinAction.toggle());
   };
 
+  const submitLogin = () => {
+    fetch('http://localhost:8080/member/login/' + login.email, {
+      method: 'GET',
+    })
+      .then((res) => {
+        if (res.status === 200) return res.json();
+        else return null;
+      })
+      .then((res) => {
+        if (res !== null && res.email === login.email && res.pw === login.pw) {
+          dispatch(memberAction.login(res));
+          dispatch(signinAction.toggle());
+        } else {
+          alert('로그인에 실패하셨습니다.');
+          setLogin({ email: '', pw: '' });
+        }
+      });
+  };
+
   return (
     <div>
       <StyledLogoImage src={logo}></StyledLogoImage>
       <form autoComplete="on">
         <FormControl className={clsx(classes.margin, classes.textField)}>
-          <TextField label="이메일" type="email" />
+          <TextField
+            value={login.email}
+            label="이메일"
+            type="email"
+            name="email"
+            onChange={changeValue}
+          />
         </FormControl>
         <FormControl className={clsx(classes.margin, classes.textField)}>
           <InputLabel htmlFor="standard-adornment-password">
@@ -85,9 +112,11 @@ const LoginPage = () => {
           </InputLabel>
           <Input
             type={values.showPassword ? 'text' : 'password'}
-            value={values.password}
+            value={login.pw}
             autoComplete="off"
-            onChange={handleChange('password')}
+            onChange={changeValue}
+            label="비밀번호"
+            name="pw"
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -102,7 +131,7 @@ const LoginPage = () => {
           />
         </FormControl>
         <FormControl className={clsx(classes.margin, classes.textField)}>
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={submitLogin}>
             로그인
           </Button>
         </FormControl>

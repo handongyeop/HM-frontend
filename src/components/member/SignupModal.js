@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import SignupPage from '../../pages/user/SignupPage';
+import SignupPage from '../../pages/member/SignupPage';
 import { useDispatch } from 'react-redux';
-import { signupAction } from '../../redux/SignupSlice';
+import { signupAction } from '../../redux/SignReducer';
 
 const StyledModalDiv = styled.div`
   position: fixed;
